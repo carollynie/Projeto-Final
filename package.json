@@ -1,0 +1,17 @@
+{
+  "name": "projeto_final_liberdu",
+  "version": "1.0.0",
+  "description": "projeto de uma plataforma de educacao",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "ana-carolina",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7"
+  }
+}
