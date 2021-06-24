@@ -38,6 +38,7 @@ const atualizar = (request, response) => {
     const encontraAluno = alunosModel.find(aluno => aluno.id == idRequerido)
 
     let alunoAtualizar = {
+        id: Math.random().toString(16).substr(2, 9),
         nome: request.body.nome,
         email: request.body.email
     }

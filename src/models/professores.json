@@ -1,1 +1,54 @@
-
+[
+    {
+        "id": "fc6335ec7",
+        "nome": "testeput",
+        "email": "testeput@gmail.com",
+        "localidade": "Ceara",
+        "materias": [
+            "java",
+            "historia",
+            "ingles"
+        ],
+        "valor": 110,
+        "possoAjudar": [
+            "desempregados",
+            "PCD"
+        ],
+        "valorEspecial": 40,
+        "modalidade": [
+            "EAD",
+            "Presencial",
+            "Chat"
+        ],
+        "pagamento": [
+            "Cartao",
+            "Boleto",
+            "Pix"
+        ]
+    },
+    {
+        "id": "5f8cdcf4b",
+        "nome": "teste2",
+        "email": "testezinho@gmail.com",
+        "localidade": "Amapa",
+        "materias": [
+            "java",
+            "python"
+        ],
+        "valor": 60,
+        "possoAjudar": [
+            "mulheresnegras",
+            "lgbqia+",
+            "PCD"
+        ],
+        "valorEspecial": 35,
+        "modalidade": [
+            "EAD",
+            "Chat"
+        ],
+        "pagamento": [
+            "Cartao",
+            "Pix"
+        ]
+    }
+]
