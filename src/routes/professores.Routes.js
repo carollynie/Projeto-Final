@@ -8,22 +8,25 @@ router.post("/", professor.criar)
 
 // Read
 // Rota que retorna uma lista com todas as pessoas cadastradas para dar aulas na plataforma
+
+// Rota que retorna os professores que ensinam pelas modalidades desejadas, sendo as opções: ead, presencial e chat
+router.get("/modalidade", professor.verModalidade)
+
+// Rota que retorna os professores que ensinam uma matéria desejada.
+router.get("/materias/", professor.verMateria)
+
+// Rota que retorna a localidade dos professores
+router.get("/localidade/", professor.verLocalidade)
+
 router.get("/", professor.verTodos)
+
+// Rota que retorna os professores que oferecem aulas com o preço médio ou menor ao digitado
+router.get("/valor/", professor.verValor)
 
 // Rota que retorna os detalhes sobre um professor, baseado no seu id.
 router.get("/:id", professor.verUm)
 
-// Rota que retorna os professores que ensinam uma matéria desejada.
-//router.get("/materia/", professor.verMateria)
 
-// Rota que retorna a localidade dos professores
-//router.get("/localidade/", professor.verLocalidade)
-
-// Rota que retorna os professores que ensinam pelas modalidades desejadas, sendo as opções: ead, presencial e chat
-//router.get("/modalidade/", professor.verModalidade)
-
-// Rota que retorna os professores que oferecem aulas com o preço médio ou menor ao digitado
-//router.get("/valor/", professor.verValor)
 
 //Update
 // PUT /professor/:id

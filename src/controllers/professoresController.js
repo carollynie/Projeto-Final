@@ -7,7 +7,7 @@ const verTodos = (request, response) => {
 
 const verUm = (request, response) => {
     const idRequerido = request.params.id
-    const encontraProfessor= professoresModel.find(professor => professor.id == idRequerido)
+    const encontraProfessor = professoresModel.find(professor => professor.id == idRequerido)
     if (encontraProfessor == undefined) {
         response.status(404).json({
             "mensagem": "id do professor não foi encontrado"
@@ -15,6 +15,90 @@ const verUm = (request, response) => {
     }
     else {
         response.status(200).send(encontraProfessor)
+    }
+}
+
+const verModalidade = (request, response) => {
+    const modalidadeRequisitada = request.query.modalidade
+    let novaListaModalidade = []
+
+    professoresModel.forEach(professor => {
+        let listaEmModalidade = professor.modalidade
+        for (item of listaEmModalidade) {
+            //SE o item for igual a modalidade da requisição E SE o professor.modalidade tiver esse item
+            if (item.includes(modalidadeRequisitada) && professor.modalidade.includes(item)) {
+                novaListaModalidade.push(professor)
+            }
+        }
+    })
+    if (novaListaModalidade.length == 0) {
+        response.status(404).json({
+            "message": "Modalidade de aula não encontrada"
+        })
+    }
+    else {
+        response.status(200).send(novaListaModalidade)
+    }
+}
+
+const verMateria = (request, response) => {
+    const materiaRequisitada = request.query.materias
+    let novaListaMaterias = []
+
+    professoresModel.forEach(professor => {
+        let listaEmMaterias = professor.materias
+        for (item of listaEmMaterias) {
+            //SE o item for igual a materia da requisição E SE o professor.materias tiver esse item
+            if (item.includes(materiaRequisitada) && professor.materias.includes(item)) {
+                novaListaMaterias.push(professor)
+            }
+        }
+    })
+    if (novaListaMaterias.length == 0) {
+        response.status(404).json({
+            "message": "Matéria solicitada não encontrada"
+        })
+    }
+    else {
+        response.status(200).send(novaListaMaterias)
+    }
+}
+
+const verLocalidade = (request, response) => {
+    const localidadeRequisitada = request.query.localidade
+    let novaListaLocalidade = []
+
+    professoresModel.forEach(professor => {
+        if (professor.localidade == localidadeRequisitada) {
+            novaListaLocalidade.push(professor)
+        }
+    })
+    if (novaListaLocalidade.length == 0) {
+        response.status(404).json({
+            "message": "Localidade solicitada não encontrada"
+        })
+    }
+    else {
+        response.status(200).send(novaListaLocalidade)
+    }
+}
+
+const verValor = (request, response) => {
+    const valorRequerido = request.query.valor
+    let novaListaValor = []
+
+    professoresModel.forEach(professor => {
+        if (professor.valor <= valorRequerido) {
+            novaListaValor.push(professor)
+        }
+    })
+    if (novaListaValor.length == 0) {
+        response.status(404).json({
+            "message": "Não há aulas disponíveis abaixo desse valor"
+        })
+    }
+    else {
+        response.status(200).send(novaListaValor)
     }
 }
 
@@ -103,11 +187,14 @@ const apagar = (request, response) => {
     }
 }
 
-module.exports ={
+module.exports = {
     verTodos,
     verUm,
+    verModalidade,
+    verMateria,
+    verLocalidade,
+    verValor,
     criar,
     atualizar,
     apagar
 }
-
