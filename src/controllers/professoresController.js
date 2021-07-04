@@ -1,111 +1,11 @@
-const professoresModel = require("../models/professores.json")
-const fs = require("fs")
+const professoresSchema = require("../models/professores")
+const mongoose = require("mongoose")
 
-const verTodos = (request, response) => {
-    response.status(200).send(professoresModel);
-}
 
-const verUm = (request, response) => {
-    const idRequerido = request.params.id
-    const encontraProfessor = professoresModel.find(professor => professor.id == idRequerido)
-    if (encontraProfessor == undefined) {
-        response.status(404).json({
-            "mensagem": "id do professor não foi encontrado"
-        })
-    }
-    else {
-        response.status(200).send(encontraProfessor)
-    }
-}
+const criar = async (request, response) => {
 
-const verModalidade = (request, response) => {
-    const modalidadeRequisitada = request.query.modalidade
-    let novaListaModalidade = []
-
-    professoresModel.forEach(professor => {
-        let listaEmModalidade = professor.modalidade
-        for (item of listaEmModalidade) {
-            //SE o item for igual a modalidade da requisição E SE o professor.modalidade tiver esse item
-            if (item.includes(modalidadeRequisitada) && professor.modalidade.includes(item)) {
-                novaListaModalidade.push(professor)
-            }
-        }
-    })
-    if (novaListaModalidade.length == 0) {
-        response.status(404).json({
-            "message": "Modalidade de aula não encontrada"
-        })
-    }
-    else {
-        response.status(200).send(novaListaModalidade)
-    }
-}
-
-const verMateria = (request, response) => {
-    const materiaRequisitada = request.query.materias
-    let novaListaMaterias = []
-
-    professoresModel.forEach(professor => {
-        let listaEmMaterias = professor.materias
-        for (item of listaEmMaterias) {
-            //SE o item for igual a materia da requisição E SE o professor.materias tiver esse item
-            if (item.includes(materiaRequisitada) && professor.materias.includes(item)) {
-                novaListaMaterias.push(professor)
-            }
-        }
-    })
-    if (novaListaMaterias.length == 0) {
-        response.status(404).json({
-            "message": "Matéria solicitada não encontrada"
-        })
-    }
-    else {
-        response.status(200).send(novaListaMaterias)
-    }
-}
-
-const verLocalidade = (request, response) => {
-    const localidadeRequisitada = request.query.localidade
-    let novaListaLocalidade = []
-
-    professoresModel.forEach(professor => {
-        if (professor.localidade == localidadeRequisitada) {
-            novaListaLocalidade.push(professor)
-        }
-    })
-    if (novaListaLocalidade.length == 0) {
-        response.status(404).json({
-            "message": "Localidade solicitada não encontrada"
-        })
-    }
-    else {
-        response.status(200).send(novaListaLocalidade)
-    }
-}
-
-const verValor = (request, response) => {
-    const valorRequerido = request.query.valor
-    let novaListaValor = []
-
-    professoresModel.forEach(professor => {
-        if (professor.valor <= valorRequerido) {
-            novaListaValor.push(professor)
-        }
-    })
-    if (novaListaValor.length == 0) {
-        response.status(404).json({
-            "message": "Não há aulas disponíveis abaixo desse valor"
-        })
-    }
-    else {
-        response.status(200).send(novaListaValor)
-    }
-}
-
-const criar = (request, response) => {
-
-    const novoProfessor = {
-        id: Math.random().toString(16).substr(2, 9),
+    const professor = new professoresSchema({
+        id: new mongoose.Types.ObjectId(),
         nome: request.body.nome,
         email: request.body.email,
         localidade: request.body.localidade,
@@ -114,75 +14,153 @@ const criar = (request, response) => {
         possoAjudar: request.body.possoAjudar,
         valorEspecial: request.body.valorEspecial,
         modalidade: request.body.modalidade,
-        pagamento: request.body.pagamento
-    }
-
-    professoresModel.push(novoProfessor)
-    fs.writeFile("./src/models/professores.json", JSON.stringify(professoresModel), "utf8", function (err) {
-        if (err) {
-            return response.status(424).send({ message: err })
-        }
+        pagamento: request.body.pagamento,
+        criadoEm: request.body.criadoEm
     })
 
-    response.status(200).json(novoProfessor)
+    try {
+        const novoProfessor = await professor.save()
+        response.status(201).json(novoProfessor)
+    }
+    catch (err) {
+        response.status(500).json(
+            { message: err.message }
+        )
+    }
 }
 
-const atualizar = (request, response) => {
-    const idRequerido = request.params.id
-    const encontraProfessor = professoresModel.find(professor => professor.id == idRequerido)
-
-    let professorAtualizar = {
-        id: Math.random().toString(16).substr(2, 9),
-        nome: request.body.nome,
-        email: request.body.email,
-        localidade: request.body.localidade,
-        materias: request.body.materias,
-        valor: request.body.valor,
-        possoAjudar: request.body.possoAjudar,
-        valorEspecial: request.body.valorEspecial,
-        modalidade: request.body.modalidade,
-        pagamento: request.body.pagamento
+const verTodos = async (request, response) => {
+    try {
+        const professores = await professoresSchema.find()
+        return response.status(200).send(professores)
     }
-
-    const indiceProfessorLocalizado = professoresModel.indexOf(encontraProfessor)
-    professoresModel.splice(indiceProfessorLocalizado, 1, professorAtualizar)
-
-
-    fs.writeFile("./src/models/professores.json", JSON.stringify(professoresModel), "utf8", function (err) {
-        if (err) {
-            return response.status(424).send({ message: err })
-        }
-    })
-
-    response.status(200).json({
-        "mensagem": "Todo o cadastro do professor foi atualizado com sucesso",
-        professorAtualizar
-    })
+    catch (err) {
+        return response.status(500).json({
+            message: err.message
+        })
+    }
 }
 
-
-const apagar = (request, response) => {
-    const idRequerido = request.params.id
-    const encontraProfessor = professoresModel.find(professor => professor.id == idRequerido)
-
-    if (encontraProfessor == undefined) {
+const verUm = async (request, response) => {
+    const professorRequerido = await professoresSchema.findById(request.params.id)
+    if (professorRequerido == null) {
         response.status(404).json({
-            "mensagem": "id do professor não foi encontrado"
+            "mensagem": "Esse professor não foi encontrado"
+        })
+    }
+    else {
+        response.status(200).send(professorRequerido)
+    }
+}
+
+const verModalidade = async (request, response) => {
+    try {
+        const professoresModalidade = await professoresSchema.find(request.query)
+        response.status(200).send(professoresModalidade)
+    }
+    catch (err) {
+        return response.status(500).json({
+            message: err.message
         })
     }
 
-    else {
-        const indiceProfessorLocalizado = professoresModel.indexOf(encontraProfessor)
-        response.status(200).send({
-            "mensagem": "o cadastro do professor foi deletado com sucesso"
+}
+
+const verMateria = async (request, response) => {
+    try {
+        const professoresMateria = await professoresSchema.find(request.query)
+        response.status(200).send(professoresMateria)
+    }
+    catch (err) {
+        return response.status(500).json({
+            message: err.message
         })
+    }
+}
 
-        professoresModel.splice(indiceProfessorLocalizado, 1)
+const verLocalidade = async (request, response) => {
+    try {
+        const professoresLocalidade = await professoresSchema.find(request.query)
+        response.status(200).send(professoresLocalidade)
+    }
+    catch (err) {
+        return response.status(500).json({
+            message: err.message
+        })
+    }
+}
 
-        fs.writeFile("./src/models/professores.json", JSON.stringify(professoresModel), "utf8", function (err) {
-            if (err) {
-                return response.status(424).send({ message: err })
-            }
+const verValor = async (request, response) => {
+    try {
+        const professores = await professoresSchema.find()
+        const professoresFiltrados = professores.filter(professor => professor.valor <= request.query.valor)
+        response.status(200).send(professoresFiltrados)
+    }
+    catch (err) {
+        return response.status(500).json({
+            message: err.message
+        })
+    }
+}
+
+const atualizar = async (request, response) => {
+    const encontraProfessor = await professoresSchema.findById(request.params.id)
+    if (encontraProfessor == null) {
+        return response.status(404).json({ message: "Professor não encontrado" })
+    }
+    if (request.body.nome != null) {
+        encontraProfessor.nome = request.body.nome
+    }
+    if (request.body.email != null) {
+        encontraProfessor.email = request.body.email
+    }
+    if (request.body.localidade != null) {
+        encontraProfessor.localidade = request.body.localidade
+    }
+    if (request.body.materias != null) {
+        encontraProfessor.materias = request.body.materias
+    }
+    if (request.body.valor != null) {
+        encontraProfessor.valor = request.body.valor
+    }
+    if (request.body.possoAjudar != null) {
+        encontraProfessor.possoAjudar = request.body.possoAjudar
+    }
+    if (request.body.valorEspecial != null) {
+        encontraProfessor.valorEspecial = request.body.valorEspecial
+    }
+    if (request.body.modalidade != null) {
+        encontraProfessor.modalidade = request.body.modalidade
+    }
+    if (request.body.pagamento != null) {
+        encontraProfessor.pagamento = request.body.pagamento
+    }
+
+    try {
+        const professorAtualizado = await encontraProfessor.save()
+        response.status(200).json(professorAtualizado)
+    }
+    catch (err) {
+        response.status(500).json({ message: err.message })
+    }
+}
+
+const apagar = async (request, response) => {
+    const encontraProfessor = await professoresSchema.findById(request.params.id)
+    if (encontraProfessor == null) {
+        return response.status(404).json({
+            message: "Professor não encontrado"
+        })
+    }
+    try {
+        await encontraProfessor.remove()
+        response.status(200).json({
+            message: "O cadastro do professor foi deletado com sucesso"
+        })
+    }
+    catch (err) {
+        response.status(500).json({
+            message: err.message
         })
     }
 }
