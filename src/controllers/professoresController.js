@@ -5,8 +5,9 @@ const mongoose = require("mongoose")
 const criar = async (request, response) => {
 
     const professor = new professoresSchema({
-        id: new mongoose.Types.ObjectId(),
+        _id: new mongoose.Types.ObjectId(),
         nome: request.body.nome,
+        descricao: request.body.descricao,
         email: request.body.email,
         localidade: request.body.localidade,
         materias: request.body.materias,
@@ -63,7 +64,6 @@ const verModalidade = async (request, response) => {
             message: err.message
         })
     }
-
 }
 
 const verMateria = async (request, response) => {

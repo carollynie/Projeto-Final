@@ -47,31 +47,3 @@ const professorSchema = new mongoose.Schema({
 )
 
 module.exports = mongoose.model("professor", professorSchema)
-
-
-// {
-//     "id": "fc6335ec7",
-//     "nome": "testeput",
-//     "email": "testeput@gmail.com",
-//     "localidade": "ceara",
-//     "materias": [
-//         "java",
-//         "historia",
-//         "ingles"
-//     ],
-//     "valor": 110,
-//     "possoAjudar": [
-//         "desempregados",
-//         "pcd"
-//     ],
-//     "valorEspecial": 40,
-//     "modalidade": [
-//         "ead",
-//         "presencial"
-//     ],
-//     "pagamento": [
-//         "cartao",
-//         "boleto",
-//         "picpay"
-//     ]
-// }
