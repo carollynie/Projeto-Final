@@ -9,6 +9,10 @@ const professorSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    descricao: {
+        type: String,
+        required: true
+    },
     localidade: {
         type: String,
         required: true

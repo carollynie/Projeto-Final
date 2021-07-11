@@ -4,31 +4,77 @@ O intuito é que os professores possam ensinar para adquirir uma renda extra e, 
 Para os alunos, essa plataforma possibilitará encontrar ajuda no que precisarem, com a possibilidade de encontrarem aulas por videochamada, presenciais e até mesmo via chat, contemplando assim pessoas que possuam deficiência auditiva.
 
 
-
 ## Estrutura da API - alunos
-``` json
+``` js
 {
-        "id": "string",
-        "nome": "string",
-        "email": "string"
+    nome: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    criadoEm:{
+        type: Date,
+        required: true,
+        default: new Date
+    }
 }
 ```
 
 ## Estrutura da API - professores
-``` json
+``` js
 {
-        "id": "string",
-        "nome": "string",
-        "email": "string",
-        "localidade": "string",
-        "materias": ["string"],
-        "valor": "number",
-        "possoAjudar": ["string"],
-        "valorEspecial": "number",
-        "modalidade": ["string"],
-        "pagamento": ["string"]
+       
+    nome: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    descricao: {
+        type: String,
+        required: true
+    },
+    localidade: {
+        type: String,
+        required: true
+    },
+    materias: {
+        type: Array,
+        required: true
+    },
+    valor: {
+        type: Number,
+        required: true
+    },
+    possoAjudar: {
+        type: Array,
+        required: true
+    },
+    valorEspecial: {
+        type: Number,
+        required: true
+    },
+    modalidade: {
+        type: Array,
+        required: true
+    },
+    pagamento: {
+        type: Array,
+        required: true
+    },
+    criadoEm: {
+        type: Date,
+        required: true,
+        default: new Date
+    }
 }
 ```
+
 ## Rotas (/)
 Rota de apresentação do projeto
 
@@ -36,6 +82,13 @@ Rota de apresentação do projeto
 
 ### [POST]/alunos/
 Realiza o cadastro de um aluno
+
+``` json
+{
+        "nome": "string",
+        "email": "string",
+}
+```
 
 ### [GET]/alunos/:id
 Retorna o cadastro de um aluno a partir do seu id
@@ -50,6 +103,20 @@ Apaga um cadastro pelo id solicitado
 
 ### [POST]/professores/
 Realiza o cadastro de um professor
+``` json
+{
+        "nome": "string",
+        "descricao":"string",
+        "email": "string",
+        "localidade": "string",
+        "materias": "array",
+        "valor": "number",
+        "possoAjudar": "array",
+        "valorEspecial": "array",
+        "modalidade": "array",
+        "pagamento": "array",
+}
+```
 
 ### [GET]/professores/
 Mostra todos os professores
@@ -75,6 +142,20 @@ Retorna o cadastro dos professores que atendem o valor igual ou menor ao desejad
 
 ### [PUT]/professores/:id
 Atualiza um cadastro pelo id solicitado
+``` json
+{
+        "nome": "string",
+        "descricao":"string",
+        "email": "string",
+        "localidade": "string",
+        "materias": "array",
+        "valor": "number",
+        "possoAjudar": "array",
+        "valorEspecial": "array",
+        "modalidade": "array",
+        "pagamento": "array",
+}
+```
 
 ### [DELETE]/professores/:id
 Apaga um cadastro pelo id solicitado
